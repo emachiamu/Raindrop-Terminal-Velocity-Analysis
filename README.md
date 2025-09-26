@@ -40,7 +40,7 @@ Il progetto include:
 Il codice è stato **interamente generato con l’ausilio di intelligenze artificiali** durante il seminario, come esercizio di:
 - prompting tecnico  
 - validazione e correzione di output generati  
-- confronto fra modelli (ChatGPT, Lucrezia, Gemini)  
+- confronto fra modelli (ChatGPT, Opus 4.1, Gemini 2.5_flash)  
 
 > ℹ️ L’AI è stata usata **come strumento di supporto**: la fase critica di interpretazione, controllo e adattamento rimane sempre responsabilità dello studente/ricercatore.
 
