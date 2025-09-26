@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raindrop Terminal Velocity Analysis</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1,
+        h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+
+        select,
+        input {
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        select:focus,
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .results {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e8f4f8;
+            border-radius: 10px;
+            border-left: 5px solid #17a2b8;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        tr:hover {
+            background: #f1f3f5;
+        }
+
+        .chart-container {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .physics-details {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            color: #495057;
+            margin: 0 0 10px 0;
+            font-size: 14px;
+        }
+
+        .summary-card .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🌧️ Raindrop Terminal Velocity Analysis</h1>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label for="cloudType">Cloud Type:</label>
+                <select id="cloudType">
+                    <option value="stratus">Stratus (Drizzle)</option>
+                    <option value="nimbostratus">Nimbostratus (Light Rain)</option>
+                    <option value="cumulus">Cumulus (Moderate Rain)</option>
+                    <option value="cumulonimbus">Cumulonimbus (Heavy Rain)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="temperature">Temperature (°C):</label>
+                <input type="number" id="temperature" value="15" min="-20" max="40">
+            </div>
+
+            <div class="input-group">
+                <label for="humidity">Relative Humidity (%):</label>
+                <input type="number" id="humidity" value="80" min="0" max="100">
+            </div>
+
+            <div class="input-group">
+                <label for="altitude">Cloud Base Altitude (m):</label>
+                <input type="number" id="altitude" value="1500" min="100" max="15000">
+            </div>
+
+            <div class="input-group">
+                <label for="pollution">Air Quality:</label>
+                <select id="pollution">
+                    <option value="clean">Clean (Rural)</option>
+                    <option value="moderate">Moderate (Suburban)</option>
+                    <option value="polluted">Polluted (Urban)</option>
+                </select>
+            </div>
+        </div>
+
+        <button onclick="calculateVelocities()">Calculate Terminal Velocities</button>
+
+        <div id="results"></div>
+
+        <div class="chart-container">
+            <canvas id="velocityChart"></canvas>
+        </div>
+
+        <h2>Comprehensive Results Summary Table</h2>
+        <div id="summaryTable"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let velocityChart = null;
+
+        // Physical constants
+        const g = 9.81; // m/s^2
+        const rho_water = 1000; // kg/m^3
+        const R = 287; // J/(kg·K) - specific gas constant for dry air
+
+        // Cloud parameters database
+        const cloudData = {
+            'stratus': {
+                name: 'Stratus',
+                dropSizes: [0.1, 0.2, 0.3, 0.4, 0.5], // mm
+                typicalHeight: 1000,
+                description: 'Drizzle'
+            },
+            'nimbostratus': {
+                name: 'Nimbostratus',
+                dropSizes: [0.5, 1.0, 1.5, 2.0], // mm
+                typicalHeight: 2000,
+                description: 'Light Rain'
+            },
+            'cumulus': {
+                name: 'Cumulus',
+                dropSizes: [2.0, 2.5, 3.0], // mm
+                typicalHeight: 3000,
+                description: 'Moderate Rain'
+            },
+            'cumulonimbus': {
+                name: 'Cumulonimbus',
+                dropSizes: [3.0, 4.0, 5.0, 6.0], // mm
+                typicalHeight: 5000,
+                description: 'Heavy Rain'
+            }
+        };
+
+        function calculateAirDensity(temperature, altitude, humidity) {
+            // Temperature in Kelvin
+            const T = temperature + 273.15;
+
+            // Pressure at altitude using barometric formula
+            const P0 = 101325; // Pa at sea level
+            const L = 0.0065; // Temperature lapse rate K/m
+            const T0 = 288.15; // Standard temperature at sea level
+            const P = P0 * Math.pow((T0 - L * altitude) / T0, (g * 0.029) / (R * L));
+
+            // Saturation vapor pressure
+            const es = 611.2 * Math.exp(17.67 * temperature / (temperature + 243.5));
+            const e = (humidity / 100) * es;
+
+            // Air density with humidity correction
+            const rho = (P - 0.378 * e) / (R * T);
+            return rho;
+        }
+
+        function calculateDynamicViscosity(temperature, humidity) {
+            // Sutherland's formula for air viscosity
+            const T = temperature + 273.15;
+            const mu0 = 1.716e-5;
+            const T0 = 273.15;
+            const S = 110.4;
+
+            let mu = mu0 * Math.pow(T / T0, 1.5) * (T0 + S) / (T + S);
+
+            // Humidity correction (approximate)
+            mu *= (1 - 0.0002 * humidity);
+
+            return mu;
+        }
+
+        function calculateDragCoefficient(Re, diameter) {
+            // Drag coefficient for spheres with deformation correction
+            let Cd;
+
+            if (Re < 1) {
+                Cd = 24 / Re; // Stokes flow
+            } else if (Re < 1000) {
+                Cd = 24 / Re * (1 + 0.15 * Math.pow(Re, 0.687)); // Intermediate
+            } else {
+                // High Reynolds number with deformation
+                Cd = 0.44;
+                if (diameter > 1) {
+                    // Deformation factor for larger drops
+                    const deformFactor = 1 + 0.1 * (diameter - 1);
+                    Cd *= deformFactor;
+                }
+            }
+
+            return Cd;
+        }
+
+        function calculateTerminalVelocity(diameter, airDensity, viscosity, pollutionFactor) {
+            const radius = diameter / 2000; // Convert mm to m
+            const mass = rho_water * (4 / 3) * Math.PI * Math.pow(radius, 3);
+            const area = Math.PI * Math.pow(radius, 2);
+
+            // Iterative solution for terminal velocity
+            let v = 1; // Initial guess m/s
+            let v_prev;
+            let iterations = 0;
+
+            do {
+                v_prev = v;
+                const Re = airDensity * v * 2 * radius / viscosity;
+                const Cd = calculateDragCoefficient(Re, diameter) * pollutionFactor;
+
+                // Terminal velocity equation
+                v = Math.sqrt(2 * mass * g / (Cd * airDensity * area));
+                iterations++;
+            } while (Math.abs(v - v_prev) > 0.001 && iterations < 100);
+
+            return v;
+        }
+
+        function calculateVelocities() {
+            const cloudType = document.getElementById('cloudType').value;
+            const temperature = parseFloat(document.getElementById('temperature').value);
+            const humidity = parseFloat(document.getElementById('humidity').value);
+            const altitude = parseFloat(document.getElementById('altitude').value);
+            const pollution = document.getElementById('pollution').value;
+
+            // Pollution factors
+            const pollutionFactors = {
+                'clean': 1.0,
+                'moderate': 1.05,
+                'polluted': 1.1
+            };
+
+            const cloud = cloudData[cloudType];
+            const airDensity = calculateAirDensity(temperature, altitude, humidity);
+            const viscosity = calculateDynamicViscosity(temperature, humidity);
+            const pollutionFactor = pollutionFactors[pollution];
+
+            // Calculate velocities for different drop sizes
+            const results = [];
+            cloud.dropSizes.forEach(diameter => {
+                const velocity = calculateTerminalVelocity(diameter, airDensity, viscosity, pollutionFactor);
+                const Re = airDensity * velocity * (diameter / 1000) / viscosity;
+                const fallTime = altitude / velocity;
+
+                results.push({
+                    diameter: diameter,
+                    velocity: velocity,
+                    reynolds: Re,
+                    fallTime: fallTime
+                });
+            });
+
+            displayResults(results, cloud, temperature, humidity, altitude, pollution, airDensity, viscosity);
+            updateChart(results, cloud.name);
+            generateSummaryTable();
+        }
+
+        function displayResults(results, cloud, temp, humidity, altitude, pollution, airDensity, viscosity) {
+            const minVel = Math.min(...results.map(r => r.velocity));
+            const maxVel = Math.max(...results.map(r => r.velocity));
+            const avgVel = results.reduce((sum, r) => sum + r.velocity, 0) / results.length;
+
+            let html = `
+                <div class="results">
+                    <h2>Results for ${cloud.name} (${cloud.description})</h2>
+                    
+                    <div class="physics-details">
+                        <strong>Atmospheric Conditions:</strong><br>
+                        • Air Density: ${airDensity.toFixed(3)} kg/m³<br>
+                        • Dynamic Viscosity: ${(viscosity * 1e6).toFixed(2)} × 10⁻⁶ Pa·s<br>
+                        • Temperature: ${temp}°C | Humidity: ${humidity}%<br>
+                        • Air Quality: ${pollution.charAt(0).toUpperCase() + pollution.slice(1)}
+                    </div>
+                    
+                    <div class="summary-grid">
+                        <div class="summary-card">
+                            <h3>Velocity Range</h3>
+                            <div class="value">${minVel.toFixed(1)} - ${maxVel.toFixed(1)} m/s</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Average Velocity</h3>
+                            <div class="value">${avgVel.toFixed(1)} m/s</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Fall Time Range</h3>
+                            <div class="value">${(altitude / maxVel).toFixed(0)} - ${(altitude / minVel).toFixed(0)} s</div>
+                        </div>
+                    </div>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Drop Diameter (mm)</th>
+                                <th>Terminal Velocity (m/s)</th>
+                                <th>Reynolds Number</th>
+                                <th>Fall Time from ${altitude}m (s)</th>
+                                <th>Flow Regime</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            results.forEach(r => {
+                let regime = r.reynolds < 1 ? 'Stokes' :
+                    r.reynolds < 1000 ? 'Intermediate' : 'Turbulent';
+                html += `
+                    <tr>
+                        <td>${r.diameter.toFixed(1)}</td>
+                        <td>${r.velocity.toFixed(2)}</td>
+                        <td>${r.reynolds.toFixed(0)}</td>
+                        <td>${r.fallTime.toFixed(1)}</td>
+                        <td>${regime}</td>
+                    </tr>
+                `;
+            });
+
+            html += '</tbody></table></div>';
+            document.getElementById('results').innerHTML = html;
+        }
+
+        function updateChart(results, cloudName) {
+            const ctx = document.getElementById('velocityChart').getContext('2d');
+
+            if (velocityChart) {
+                velocityChart.destroy();
+            }
+
+            velocityChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: results.map(r => r.diameter.toFixed(1) + ' mm'),
+                    datasets: [{
+                        label: `Terminal Velocity for ${cloudName}`,
+                        data: results.map(r => r.velocity),
+                        borderColor: 'rgb(102, 126, 234)',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 6,
+                        pointBackgroundColor: 'rgb(102, 126, 234)',
+                        pointBorderColor: 'white',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Raindrop Terminal Velocity vs Diameter',
+                            font: { size: 16 }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Terminal Velocity (m/s)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Drop Diameter'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function generateSummaryTable() {
+            const scenarios = [
+                { temp: -5, humidity: 90, altitude: 500, pollution: 'clean', desc: 'Winter, Clean Air' },
+                { temp: 15, humidity: 70, altitude: 1500, pollution: 'moderate', desc: 'Spring, Suburban' },
+                { temp: 30, humidity: 85, altitude: 2000, pollution: 'polluted', desc: 'Summer, Urban' },
+                { temp: 10, humidity: 95, altitude: 800, pollution: 'clean', desc: 'Autumn, Rural' }
+            ];
+
+            let html = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Scenario</th>
+                            <th>Cloud Type</th>
+                            <th>Drop Size Range (mm)</th>
+                            <th>Velocity Range (m/s)</th>
+                            <th>Typical Velocity (m/s)</th>
+                            <th>Fall Time from 1000m (s)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            const pollutionFactors = { 'clean': 1.0, 'moderate': 1.05, 'polluted': 1.1 };
+
+            scenarios.forEach(scenario => {
+                Object.keys(cloudData).forEach(cloudType => {
+                    const cloud = cloudData[cloudType];
+                    const airDensity = calculateAirDensity(scenario.temp, scenario.altitude, scenario.humidity);
+                    const viscosity = calculateDynamicViscosity(scenario.temp, scenario.humidity);
+                    const pollutionFactor = pollutionFactors[scenario.pollution];
+
+                    const velocities = cloud.dropSizes.map(d =>
+                        calculateTerminalVelocity(d, airDensity, viscosity, pollutionFactor)
+                    );
+
+                    const minVel = Math.min(...velocities);
+                    const maxVel = Math.max(...velocities);
+                    const avgVel = velocities.reduce((a, b) => a + b, 0) / velocities.length;
+
+                    html += `
+                        <tr>
+                            <td>${scenario.desc}</td>
+                            <td>${cloud.name}</td>
+                            <td>${Math.min(...cloud.dropSizes)} - ${Math.max(...cloud.dropSizes)}</td>
+                            <td>${minVel.toFixed(1)} - ${maxVel.toFixed(1)}</td>
+                            <td>${avgVel.toFixed(1)}</td>
+                            <td>${(1000 / avgVel).toFixed(0)}</td>
+                        </tr>
+                    `;
+                });
+            });
+
+            html += '</tbody></table>';
+            document.getElementById('summaryTable').innerHTML = html;
+        }
+
+        // Initialize on load
+        window.onload = function () {
+            calculateVelocities();
+        };
+    </script>
+</body>
+
+</html>
