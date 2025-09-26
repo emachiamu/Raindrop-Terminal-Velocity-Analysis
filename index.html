@@ -65,6 +65,121 @@
             border-color: #667eea;
         }
 
+
+        <h1>Comprendere la velocità di caduta di una goccia di pioggia</h1>
+
+<p>Comprendere la velocità di caduta di una goccia di pioggia è un problema classico della fluidodinamica, apparentemente semplice ma intrinsecamente complesso a causa delle interazioni non lineari e delle dipendenze da molteplici parametri ambientali e intrinseci della goccia. La velocità che ci interessa è la <strong>velocità terminale (<em>v<sub>t</sub></em>)</strong>, ovvero la velocità costante raggiunta quando la forza di gravità è bilanciata dalla forza di resistenza aerodinamica (drag).</p>
+
+<p>Per calcolare con precisione la velocità terminale di una goccia di pioggia, dobbiamo considerare i seguenti parametri fondamentali e le loro interdipendenze:</p>
+
+<h3>I. Parametri Intrinseci della Goccia</h3>
+
+<h4>1. Massa della Goccia (<em>m</em>):</h4>
+<ul>
+    <li>Dipende dal <strong>volume (<em>V</em>)</strong> e dalla <strong>densità dell'acqua (&rho;<sub>w</sub>)</strong>.</li>
+    <li><em>m</em> = <em>V</em> &middot; &rho;<sub>w</sub>.</li>
+    <li>La densità dell'acqua è circa 1000&nbsp;kg/m<sup>3</sup> a 4&deg;C, ma diminuisce leggermente con l'aumentare della temperatura. Per la pioggia, si assume tipicamente un valore prossimo a 998&nbsp;kg/m<sup>3</sup> a 20&deg;C.</li>
+</ul>
+
+<h4>2. Forma della Goccia:</h4>
+<ul>
+    <li>Contrariamente all'immaginario comune, le gocce di pioggia non sono sfere perfette, specialmente quelle più grandi.</li>
+    <li><strong>Gocce piccole (diametro <em>D</em> &lt; 1&nbsp;mm):</strong> Tendono ad essere quasi sferiche a causa della tensione superficiale dominante.</li>
+    <li><strong>Gocce medie (1&nbsp;mm &lt; <em>D</em> &lt; 4&nbsp;mm):</strong> Assumono una forma di "sferoide oblato" (schiacciato ai poli), simile a un panino da hamburger, a causa della pressione aerodinamica sulla loro superficie inferiore.</li>
+    <li><strong>Gocce grandi (<em>D</em> &gt; 4&nbsp;mm):</strong> Diventano altamente deformate, instabili e tendono a rompersi in gocce più piccole.</li>
+    <li>La forma influenza direttamente l'area della sezione trasversale (<em>A</em>) e il coefficiente di drag (<em>C<sub>D</sub></em>).</li>
+</ul>
+
+<h4>3. Dimensione della Goccia (Diametro <em>D</em> o Raggio <em>r</em>):</h4>
+<ul>
+    <li>È il parametro più critico per determinare la velocità terminale.</li>
+    <li>Influenza il volume (e quindi la massa) e l'area della sezione trasversale esposta al flusso d'aria.</li>
+    <li>Le gocce di pioggia variano tipicamente da 0.1&nbsp;mm (pioviggine) a 6&nbsp;mm (pioggia intensa), sebbene gocce più grandi siano rare e instabili.</li>
+</ul>
+
+<h3>II. Parametri del Mezzo (Aria)</h3>
+
+<h4>1. Densità dell'Aria (&rho;<sub>a</sub>):</h4>
+<ul>
+    <li>È un parametro fondamentale per la forza di drag.</li>
+    <li>Varia significativamente con:
+        <ul>
+            <li><strong>Altitudine:</strong> Diminuisce esponenzialmente con l'altezza.</li>
+            <li><strong>Temperatura:</strong> Diminuisce all'aumentare della temperatura (a pressione costante).</li>
+            <li><strong>Pressione Atmosferica:</strong> Aumenta all'aumentare della pressione.</li>
+            <li><strong>Umidità:</strong> L'aria umida è leggermente meno densa dell'aria secca alla stessa temperatura e pressione (perché la massa molare dell'acqua è inferiore a quella dell'aria secca).</li>
+        </ul>
+    </li>
+    <li>Tipicamente, a livello del mare e 20&deg;C, &rho;<sub>a</sub> &approx; 1.2&nbsp;kg/m<sup>3</sup>.</li>
+</ul>
+
+<h4>2. Viscosità Dinamica dell'Aria (&mu;):</h4>
+<ul>
+    <li>Misura la resistenza interna di un fluido al flusso.</li>
+    <li>Dipende principalmente dalla <strong>temperatura dell'aria</strong>: aumenta con l'aumentare della temperatura.</li>
+    <li>È cruciale per le gocce più piccole, dove il regime di flusso è laminare (legge di Stokes).</li>
+    <li>Tipicamente, a livello del mare e 20&deg;C, &mu; &approx; 1.8 &times; 10<sup>-5</sup>&nbsp;Pa &middot; s.</li>
+</ul>
+
+<h3>III. Parametri Esterni e di Interazione</h3>
+
+<h4>1. Accelerazione di Gravità (<em>g</em>):</h4>
+<ul>
+    <li>La forza motrice della caduta.</li>
+    <li>Varia leggermente con l'altitudine e la latitudine, ma per la maggior parte dei calcoli meteorologici si assume un valore standard di 9.81&nbsp;m/s<sup>2</sup>.</li>
+</ul>
+
+<h4>2. Numero di Reynolds (<em>Re</em>):</h4>
+<ul>
+    <li>Un numero adimensionale che caratterizza il regime di flusso attorno alla goccia.</li>
+    <li><em>Re</em> = <span class="formula">&rho;<sub>a</sub> <em>v<sub>t</sub> D</em> / &mu;</span></li>
+    <li>Indica se il flusso è laminare (<em>Re</em> &laquo; 1), transitorio (1 &lt; <em>Re</em> &lt; 1000), o turbolento (<em>Re</em> &raquo; 1000).</li>
+    <li>Per le gocce di pioggia, <em>Re</em> può variare da meno di 1 (per la pioviggine) a diverse migliaia (per le gocce più grandi).</li>
+</ul>
+
+<h4>3. Coefficiente di Drag (<em>C<sub>D</sub></em>):</h4>
+<ul>
+    <li>Un numero adimensionale che quantifica la resistenza aerodinamica.</li>
+    <li><strong>Non è una costante!</strong> Dipende fortemente dal numero di Reynolds e dalla forma della goccia.</li>
+    <li><strong>Per <em>Re</em> &lt; 1 (regime di Stokes, gocce molto piccole):</strong> <em>C<sub>D</sub></em> = <span class="formula">24 / <em>Re</em></span>. La forza di drag è proporzionale alla velocità.</li>
+    <li><strong>Per 1 &lt; <em>Re</em> &lt; 1000 (regime intermedio):</strong> <em>C<sub>D</sub></em> diminuisce all'aumentare di <em>Re</em> e non ha una forma analitica semplice; spesso si usano correlazioni empiriche (es. correlazione di Schiller-Naumann).</li>
+    <li><strong>Per <em>Re</em> &gt; 1000 (regime di Newton, gocce grandi):</strong> <em>C<sub>D</sub></em> tende a un valore quasi costante (circa 0.4 - 0.5 per una sfera, ma varia per le gocce deformate). La forza di drag è proporzionale al quadrato della velocità.</li>
+</ul>
+
+<h3>IV. Equazioni Fondamentali</h3>
+
+<p>La velocità terminale (<em>v<sub>t</sub></em>) si ottiene bilanciando la forza di gravità (<em>F<sub>g</sub></em>) con la forza di drag (<em>F<sub>D</sub></em>):</p>
+
+<p class="formula"><em>F<sub>g</sub></em> = <em>m</em> &middot; <em>g</em> = <sup>4</sup>&frasl;<sub>3</sub>&pi; <em>r</em><sup>3</sup> &rho;<sub>w</sub> <em>g</em> (per una sfera)</p>
+
+<p class="formula"><em>F<sub>D</sub></em> = <sup>1</sup>&frasl;<sub>2</sub> &rho;<sub>a</sub> <em>v<sub>t</sub></em><sup>2</sup> <em>A C<sub>D</sub></em> (equazione generale di drag)<br>
+dove <em>A</em> = &pi; <em>r</em><sup>2</sup> è l'area della sezione trasversale per una sfera.</p>
+
+<p>Uguagliando le forze:</p>
+<p class="formula"><sup>4</sup>&frasl;<sub>3</sub>&pi; <em>r</em><sup>3</sup> &rho;<sub>w</sub> <em>g</em> = <sup>1</sup>&frasl;<sub>2</sub> &rho;<sub>a</sub> <em>v<sub>t</sub></em><sup>2</sup> (&pi; <em>r</em><sup>2</sup>) <em>C<sub>D</sub></em></p>
+
+<p>Risolvendo per <em>v<sub>t</sub></em>:</p>
+<p class="formula"><em>v<sub>t</sub></em> = &radic;<span style="text-decoration:overline;"><sup>8 <em>r g</em> &rho;<sub>w</sub></sup>&frasl;<sub>3 &rho;<sub>a</sub> <em>C<sub>D</sub></em></sub></span></p>
+
+<h4>Casi Specifici:</h4>
+<ul>
+    <li><strong>Legge di Stokes (per <em>Re</em> &lt; 1):</strong>
+        <p class="formula"><em>v<sub>t</sub></em> = <sup>2 <em>r</em><sup>2</sup> <em>g</em> (&rho;<sub>w</sub> - &rho;<sub>a</sub>)</sup>&frasl;<sub>9 &mu;</sub></p>
+        <p>(Spesso &rho;<sub>a</sub> è trascurato rispetto a &rho;<sub>w</sub> per le gocce d'acqua).</p>
+    </li>
+    <li><strong>Gocce più grandi:</strong> La dipendenza di <em>C<sub>D</sub></em> da <em>Re</em> (e quindi da <em>v<sub>t</sub></em>) rende l'equazione non lineare e richiede soluzioni iterative o l'uso di correlazioni empiriche specifiche per le gocce di pioggia, come quelle sviluppate da Gunn e Kinzer (1949) o Beard (1976), che tengono conto della deformazione della goccia.</li>
+</ul>
+
+<h3>V. Contesto Ambientale Aggiuntivo</h3>
+
+<p>Sebbene non siano parametri diretti nelle equazioni di forza, le seguenti condizioni influenzano i parametri del mezzo:</p>
+<ul>
+    <li><strong>Venti e Turbolenze:</strong> Sebbene la velocità terminale sia definita in aria calma, i venti e le turbolenze atmosferiche possono causare deviazioni dalla traiettoria verticale e fluttuazioni nella velocità istantanea, ma non alterano la velocità terminale intrinseca della goccia rispetto all'aria circostante.</li>
+    <li><strong>Evaporazione:</strong> Durante la caduta, specialmente in strati d'aria più secchi, le gocce possono evaporare, riducendo la loro massa e dimensione e quindi alterando la loro velocità terminale. Questo è un processo dinamico che aggiunge un'ulteriore complessità.</li>
+</ul>
+
+<p>In sintesi, il calcolo preciso della velocità di caduta della pioggia richiede una conoscenza dettagliata della dimensione e della forma della goccia, nonché delle proprietà termodinamiche dell'atmosfera (temperatura, pressione, umidità) lungo il percorso di caduta, che determinano la densità e la viscosità dell'aria e, di conseguenza, il regime di flusso e il coefficiente di drag.</p>
+
         button {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
